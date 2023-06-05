@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Send Request Form</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+
+        * {
+            font-family: "Arial", Monaco, monospace;
+        }
+
+        label {
+            margin-right: 10px;
+        }
+
+        input[type=text], input[type=number], select {
+            background-color: #1a1a1a;
+            border: 1px solid #ffffff;
+            color: #ffffff;
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        input[type=submit] {
+            background-color: #1a1a1a;
+            border: 1px solid #ffffff;
+            color: #ffffff;
+            padding: 5px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        #output {
+            margin-top: 20px;
+        }
+
+        #output p {
+            white-space: pre-wrap;
+            border: 1px solid #ffffff;
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+<h2>Send Request</h2>
+<form id="requestForm">
+    <label for="protocol">Protocol:</label>
+    <select id="protocol" name="protocol">
+        <option value="http">HTTP</option>
+        <option value="https" selected>HTTPS</option>
+    </select>
+
+    <label for="host">Host:</label>
+    <input type="text" id="host" name="host" value="sr.crepe.moe" required>
+
+    <label for="password">Password:</label>
+    <input type="text" id="password" name="password" value="BOcucIIfsCJnHLIn" required>
+
+    <label for="uid">UID:</label>
+    <input type="number" id="uid" name="uid" value="" required>
+
+    <label for="command">Command:</label>
+    <input type="text" id="command" name="command" value="avatar giveall" required>
+
+    <input type="submit" value="Send Request">
+</form>
+
+<div id="output">
+    <h2>Output:</h2>
+    <p></p>
+</div>
+
+<script>
+    function sendRequest() {
+        // Get the request from the output box and send it
+        let output = document.getElementById("output").getElementsByTagName("p")[0].innerText;
+
+        // I hate cors, so I'm just going to open a new tab with the request
+        window.open(output, "_blank");
+    }
+
+    function updateOutput() {
+        // Get the values from the form and update the output box
+        let protocol = document.getElementById("protocol").value;
+        let host = document.getElementById("host").value;
+        let password = document.getElementById("password").value;
+        let uid = document.getElementById("uid").value;
+        let command = document.getElementById("command").value;
+
+        document.getElementById("output").getElementsByTagName("p")[0].innerText = `${protocol}://${host}/api/gm?password=${password}&uid=${uid}&command=${encodeURIComponent(command)}`;
+    }
+
+    const form = document.getElementById("requestForm");
+    form.addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        sendRequest(); // Call the function to send the request
+    });
+
+    // Event listener for form input
+    form.addEventListener("input", updateOutput);
+</script>
+</body>
+</html>
