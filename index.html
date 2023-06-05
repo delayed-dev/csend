@@ -97,13 +97,13 @@
                         // Request was successful
                         // Handle the response here
                         console.log(xhr.responseText);
+                        responseBox.getElementsByTagName("p")[0].innerText = xhr.responseText;
                     } else {
                         // Request failed
                         // Handle the error here
                         console.error("Request failed with status:", xhr.status);
+                        responseBox.getElementsByTagName("p")[0].innerText = "Request failed with status: " + xhr.status;
                     }
-
-                    responseBox.getElementsByTagName("p")[0].innerText = xhr.responseText;
                 }
             };
             xhr.send();
