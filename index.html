@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Send Request Form</title>
     <style>
@@ -16,7 +17,9 @@
             margin-right: 10px;
         }
 
-        input[type=text], input[type=number], select {
+        input[type=text],
+        input[type=number],
+        select {
             background-color: #1a1a1a;
             border: 1px solid #ffffff;
             color: #ffffff;
@@ -33,75 +36,100 @@
             cursor: pointer;
         }
 
-        #output {
+        #request, #response {
             margin-top: 20px;
         }
 
-        #output p {
+        #request p, #response p {
             white-space: pre-wrap;
             border: 1px solid #ffffff;
             min-height: 20px;
         }
     </style>
 </head>
+
 <body>
-<h2>Send Request</h2>
-<form id="requestForm">
-    <label for="protocol">Protocol:</label>
-    <select id="protocol" name="protocol">
-        <option value="http">HTTP</option>
-        <option value="https" selected>HTTPS</option>
-    </select>
+    <h2>Send Request</h2>
+    <form id="requestForm">
+        <label for="protocol">Protocol:</label>
+        <select id="protocol" name="protocol">
+            <option value="http">HTTP</option>
+            <option value="https" selected>HTTPS</option>
+        </select>
 
-    <label for="host">Host:</label>
-    <input type="text" id="host" name="host" value="sr.crepe.moe" required>
+        <label for="host">Host:</label>
+        <input type="text" id="host" name="host" value="sr.crepe.moe" required>
 
-    <label for="password">Password:</label>
-    <input type="text" id="password" name="password" value="BOcucIIfsCJnHLIn" required>
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="password" value="BOcucIIfsCJnHLIn" required>
 
-    <label for="uid">UID:</label>
-    <input type="number" id="uid" name="uid" value="" required>
+        <label for="uid">UID:</label>
+        <input type="number" id="uid" name="uid" value="" required>
 
-    <label for="command">Command:</label>
-    <input type="text" id="command" name="command" value="avatar giveall" required>
+        <label for="command">Command:</label>
+        <input type="text" id="command" name="command" value="avatar giveall" required>
 
-    <input type="submit" value="Send Request">
-</form>
+        <input type="submit" value="Send Request">
+    </form>
 
-<div id="output">
-    <h2>Output:</h2>
-    <p></p>
-</div>
+    <div id="request">
+        <h2>Request:</h2>
+        <p></p>
+    </div>
 
-<script>
-    function sendRequest() {
-        // Get the request from the output box and send it
-        let output = document.getElementById("output").getElementsByTagName("p")[0].innerText;
+    <div id="response">
+        <h2>Response:</h2>
+        <p></p>
+    </div>
 
-        // I hate cors, so I'm just going to open a new tab with the request
-        window.open(output, "_blank");
-    }
+    <script>
+        function sendRequest() {
+            // Get the request from the request box and send it
+            let request = document.getElementById("request").getElementsByTagName("p")[0].innerText;
+            let responseBox = document.getElementById("response");
 
-    function updateOutput() {
-        // Get the values from the form and update the output box
-        let protocol = document.getElementById("protocol").value;
-        let host = document.getElementById("host").value;
-        let password = document.getElementById("password").value;
-        let uid = document.getElementById("uid").value;
-        let command = document.getElementById("command").value;
+            // Send a request to the URL
+            let xhr = new XMLHttpRequest();
+            xhr.open("GET", request, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Request was successful
+                        // Handle the response here
+                        console.log(xhr.responseText);
+                    } else {
+                        // Request failed
+                        // Handle the error here
+                        console.error("Request failed with status:", xhr.status);
+                    }
 
-        document.getElementById("output").getElementsByTagName("p")[0].innerText = `${protocol}://${host}/api/gm?password=${password}&uid=${uid}&command=${encodeURIComponent(command)}`;
-    }
+                    responseBox.getElementsByTagName("p")[0].innerText = xhr.responseText;
+                }
+            };
+            xhr.send();
+        }
 
-    const form = document.getElementById("requestForm");
-    form.addEventListener("submit", function(event) {
-        event.preventDefault(); // Prevent the default form submission
+        function updateRequest() {
+            // Get the values from the form and update the request box
+            let protocol = document.getElementById("protocol").value;
+            let host = document.getElementById("host").value;
+            let password = document.getElementById("password").value;
+            let uid = document.getElementById("uid").value;
+            let command = document.getElementById("command").value;
 
-        sendRequest(); // Call the function to send the request
-    });
+            document.getElementById("request").getElementsByTagName("p")[0].innerText = `${protocol}://${host}/api/gm?password=${password}&uid=${uid}&command=${encodeURIComponent(command)}`;
+        }
 
-    // Event listener for form input
-    form.addEventListener("input", updateOutput);
-</script>
+        const form = document.getElementById("requestForm");
+        form.addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            sendRequest(); // Call the function to send the request
+        });
+
+        // Event listener for form input
+        form.addEventListener("input", updateRequest);
+    </script>
 </body>
+
 </html>
